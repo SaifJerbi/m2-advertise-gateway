@@ -1,0 +1,22 @@
+version: '2'
+services:
+    m2advertisegateway-app:
+        image: m2advertisegateway
+        environment:
+            - SPRING_PROFILES_ACTIVE=prod,swagger
+            - EUREKA_CLIENT_SERVICE_URL_DEFAULTZONE=http://admin:$${jhipster.registry.password}@jhipster-registry:8761/eureka
+            - SPRING_CLOUD_CONFIG_URI=http://admin:$${jhipster.registry.password}@jhipster-registry:8761/config
+            - SPRING_DATASOURCE_URL=jdbc:mysql://m2advertisegateway-mysql:3306/m2advertisegateway?useUnicode=true&characterEncoding=utf8&useSSL=false
+            - JHIPSTER_SLEEP=30 # gives time for the JHipster Registry to boot before the application
+        ports:
+            - 8080:8080
+    m2advertisegateway-mysql:
+        extends:
+            file: mysql.yml
+            service: m2advertisegateway-mysql
+    jhipster-registry:
+        extends:
+            file: jhipster-registry.yml
+            service: jhipster-registry
+        environment:
+            - SPRING_CLOUD_CONFIG_SERVER_NATIVE_SEARCH_LOCATIONS=file:./central-config/docker-config/
